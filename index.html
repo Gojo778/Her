@@ -1,0 +1,250 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Happy New Year</title>
+
+<style>
+:root{
+  --pink:#ff4d88;
+  --purple:#7c4dff;
+  --bg:#fff0f6;
+  --card:#ffffffdd;
+}
+
+*{box-sizing:border-box}
+
+body{
+  margin:0;
+  min-height:100vh;
+  font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial;
+  background:
+    radial-gradient(circle at top left,#ffe3ee,transparent 60%),
+    radial-gradient(circle at bottom right,#e7ddff,transparent 60%),
+    var(--bg);
+  color:#2b1b23;
+  display:flex;
+  justify-content:center;
+}
+
+.wrap{
+  width:100%;
+  max-width:900px;
+  padding:30px 18px 80px;
+}
+
+.card{
+  background:var(--card);
+  border-radius:22px;
+  padding:28px;
+  box-shadow:0 20px 45px rgba(0,0,0,.12);
+  text-align:center;
+  animation:fade .6s ease;
+}
+
+@keyframes fade{
+  from{opacity:0;transform:translateY(20px)}
+  to{opacity:1;transform:none}
+}
+
+.hidden{display:none}
+
+h1{font-size:clamp(26px,4vw,38px)}
+h2{color:#6a3a52;font-weight:600}
+p{line-height:1.6}
+
+input{
+  padding:12px 14px;
+  border-radius:14px;
+  border:1px solid #ddd;
+  font-size:16px;
+  width:220px;
+  text-align:center;
+}
+
+button{
+  margin-top:18px;
+  padding:12px 20px;
+  border-radius:14px;
+  border:none;
+  font-weight:700;
+  color:white;
+  background:linear-gradient(135deg,var(--pink),var(--purple));
+  cursor:pointer;
+}
+
+button:active{transform:scale(.98)}
+
+.month{
+  font-size:52px;
+  font-weight:900;
+  background:linear-gradient(135deg,var(--pink),var(--purple));
+  -webkit-background-clip:text;
+  color:transparent;
+  margin:12px 0;
+}
+
+/* 💌 Letter animation */
+.letter-wrap{
+  margin-top:28px;
+  display:flex;
+  justify-content:center;
+  animation:float 3s ease-in-out infinite;
+}
+
+@keyframes float{
+  0%,100%{transform:translateY(0)}
+  50%{transform:translateY(-10px)}
+}
+
+.letter{
+  width:280px;
+  background:white;
+  border-radius:18px;
+  padding:20px;
+  box-shadow:0 14px 35px rgba(0,0,0,.15);
+  position:relative;
+  animation:open 1.2s ease forwards;
+  opacity:0;
+}
+
+@keyframes open{
+  from{opacity:0;transform:scale(.9)}
+  to{opacity:1;transform:scale(1)}
+}
+
+.letter::before{
+  content:"✉️";
+  position:absolute;
+  top:-20px;
+  left:50%;
+  transform:translateX(-50%);
+  font-size:28px;
+  animation:pulse 1.5s ease-in-out infinite;
+}
+
+@keyframes pulse{
+  0%,100%{transform:translateX(-50%) scale(1)}
+  50%{transform:translateX(-50%) scale(1.15)}
+}
+
+.letter p{
+  font-size:15px;
+  color:#3b2a33;
+}
+</style>
+</head>
+
+<body>
+<div class="wrap">
+
+<!-- PAGE 1 -->
+<section class="card" id="pass">
+  <h1>One small thing first</h1>
+  <h2>Enter your birthday</h2>
+  <p>DD/MM/YYYY</p>
+  <input id="date" placeholder="10/10/2007">
+  <br>
+  <button onclick="unlock()">Unlock</button>
+  <p id="err" style="color:#b0003a;display:none;margin-top:10px">
+    Wrong date 🤍
+  </p>
+</section>
+
+<!-- PAGE 2 -->
+<section class="card hidden" id="months">
+  <h2>Replaying my year…</h2>
+  <div class="month" id="month">January</div>
+</section>
+
+<!-- PAGE 3 -->
+<section class="card hidden" id="august">
+  <h1>August</h1>
+  <h2>The best month of my year</h2>
+  <p>
+    Because that’s when I met you,  
+    and everything suddenly felt warmer.
+  </p>
+  <button onclick="toNY()">Next</button>
+</section>
+
+<!-- PAGE 4 -->
+<section class="card hidden" id="ny">
+  <h1>Happy New Year ✨</h1>
+  <h2>I hope this year treats you gently</h2>
+  <p>
+    Thank you for being part of my year.  
+    I’m truly grateful for you.
+  </p>
+
+  <div class="letter-wrap">
+    <div class="letter">
+      <p>
+        I really hope this makes you happy.<br><br>
+        And suddenly…  
+        I wish I was with you.
+      </p>
+    </div>
+  </div>
+
+  <button onclick="bye()">Goodbye</button>
+</section>
+
+<!-- PAGE 5 -->
+<section class="card hidden" id="bye">
+  <h1>Goodbye</h1>
+  <p>Take care 🤍</p>
+</section>
+
+</div>
+
+<script>
+const CORRECT = "10/10/2007";
+const months = ["January","February","March","April","May","June","July","August"];
+let i=0, timer;
+
+function unlock(){
+  if(document.getElementById("date").value !== CORRECT){
+    document.getElementById("err").style.display="block";
+    return;
+  }
+  pass.classList.add("hidden");
+  monthsPage();
+}
+
+function monthsPage(){
+  monthsDiv.classList.remove("hidden");
+  timer = setInterval(()=>{
+    month.textContent = months[i];
+    if(i === 7){
+      clearInterval(timer);
+      setTimeout(()=>{
+        monthsDiv.classList.add("hidden");
+        august.classList.remove("hidden");
+      },700);
+    }
+    i++;
+  },700);
+}
+
+function toNY(){
+  august.classList.add("hidden");
+  ny.classList.remove("hidden");
+}
+
+function bye(){
+  ny.classList.add("hidden");
+  byePage.classList.remove("hidden");
+}
+
+const pass = document.getElementById("pass");
+const monthsDiv = document.getElementById("months");
+const august = document.getElementById("august");
+const ny = document.getElementById("ny");
+const byePage = document.getElementById("bye");
+const month = document.getElementById("month");
+</script>
+
+</body>
+</html>
